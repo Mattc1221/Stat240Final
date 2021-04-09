@@ -1,0 +1,12 @@
+---
+title: "STAT 240 Discussion 10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+library(tidyverse)
+library(lubridate)
+source("../../scripts/viridis.R")
+source("../../scripts/ggprob.R")
+```
