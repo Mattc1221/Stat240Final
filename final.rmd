@@ -1,12 +1,108 @@
 ---
-title: "STAT 240 Discussion 10"
+title: "STAT 240 Final Project"
 output: html_document
 ---
+
+## **Team Members**
+Matthew Chiang, Siyu Huang, Vishnu Yaragadda
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
-source("../../scripts/viridis.R")
-source("../../scripts/ggprob.R")
+source("./scripts/viridis.R")
+source("./scripts/ggprob.R")
 ```
+
+```{r include=FALSE, cache=TRUE, cache.path="cache/"}
+# get all dates
+file_list <- list.files(path="./data")
+
+# load all data
+allData <- data.frame()
+for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
+  print(file_list[i]) # GET RID OFF THIS LINE
+  if(file_list[i] == "2017-2018" || file_list[i] == "2018-2019" || file_list[i] == "2019-2020"){
+    next
+  }
+  
+  # get file names
+  league <- paste("./data/", file_list[i], "/LeagueTable.csv", sep="")
+  standard <- paste("./data/", file_list[i], "/SquadStandardStats.csv", sep="")
+  goalkeep <- paste("./data/", file_list[i], "/SquadGoalkeeping.csv", sep="")
+  
+  # load in each data table and merge it together
+  LeagueTable <- read.csv(league)
+  if( file.exists(standard) ){
+    SquadStandardStats <- read.csv(standard)
+    LeagueTable <- full_join(LeagueTable, SquadStandardStats, by="Squad")
+  }
+  if( file.exists(goalkeep) ){
+    SquadGoalkeeping <- read.csv(goalkeep)
+    LeagueTable <- full_join(LeagueTable, SquadGoalkeeping, by="Squad")
+  }
+  
+  # add year column to the data
+  LeagueTable <- select(LeagueTable, -contains(".y")) %>%
+    mutate(year = substr(file_list[i], 6, 9))
+  
+  # combine the data into one big table
+  allData <- rbind(allData, LeagueTable)
+}
+allData
+```
+
+## **Introduction**
+
+**NEED TO PUT SOMETHING HERE!**
+
+
+## **Background**
+
+> Raw Data:
+
+We found data for the La Liga Soccer League. Each season from 1988-2020, there are multiple sets of data ranging from team rankings, top scorers, standard squad statistics, team goalkeeping, team shooting, to statistics on individual players. We selected three sets of data:
+
+* League Table: includes team rankings, total wins, loses, goals for, goals against, etc.
+* Squad Standard Stats: includes general performance statistics of each team.
+* Squad Goalkeeping: includes performance statistics for the goalkeeping of each team.
+
+> Final Data: 
+
+We had to collect the above data for the seasons between 1988-2020. We combined all of the data into one large dataframe by the team name and created a year column to keep track of which teams data cooresponds to which year.
+
+> Data Citation:
+
+"La Liga Seasons", Real Federación Española de Fútbol, 7th April 2020, https://fbref.com/en/comps/12/history/La-Liga-Seasons 
+ 
+> Focus:
+ 
+The overall aim of our analysis on this data will be to determine the characteristics of the winning team in the 2020-2021 La Liga Soccer League.
+
+
+## **Analysis**
+
+> Question 1: Description
+
+-- **Siyu** put ur stuff here
+
+Analysis: ...
+
+
+> Question 2: Description
+
+-- **Vishnu** put ur stuff here, also check to see if I spelled ur last name right at the top of the doc
+
+Analysis: ...
+
+
+
+
+
+
+
+
+
+
+
+
