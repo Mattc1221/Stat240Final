@@ -21,7 +21,6 @@ file_list <- list.files(path="./data")
 # load all data
 allData <- data.frame()
 for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
-  print(file_list[i]) # GET RID OFF THIS LINE
   if(file_list[i] == "2017-2018" || file_list[i] == "2018-2019" || file_list[i] == "2019-2020"){
     next
   }
@@ -49,7 +48,6 @@ for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
   
   LeagueTable <- LeagueTable %>% 
     top_n(LeagueTable, 20)
-  print(LeagueTable)
   
   # combine the data into one big table
   allData <- rbind(allData, LeagueTable)
