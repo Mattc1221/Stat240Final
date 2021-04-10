@@ -14,7 +14,7 @@ source("./scripts/viridis.R")
 source("./scripts/ggprob.R")
 ```
 
-```{r include=FALSE, cache=TRUE, cache.path="cache/"}
+```{r include=TRUE, cache=TRUE, cache.path="cache/"}
 # get all dates
 file_list <- list.files(path="./data")
 
@@ -42,9 +42,14 @@ for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
     LeagueTable <- full_join(LeagueTable, SquadGoalkeeping, by="Squad")
   }
   
+  
   # add year column to the data
   LeagueTable <- select(LeagueTable, -contains(".y")) %>%
     mutate(year = substr(file_list[i], 6, 9))
+  
+  LeagueTable <- LeagueTable %>% 
+    top_n(LeagueTable, 20)
+  print(LeagueTable)
   
   # combine the data into one big table
   allData <- rbind(allData, LeagueTable)
