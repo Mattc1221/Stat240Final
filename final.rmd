@@ -14,7 +14,7 @@ source("./scripts/viridis.R")
 source("./scripts/ggprob.R")
 ```
 
-```{r include=TRUE, cache=TRUE, cache.path="cache/"}
+```{r cache=TRUE, cache.path="cache/", include=TRUE}
 # get all dates
 file_list <- list.files(path="./data")
 
@@ -85,11 +85,27 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
-> Question 1: Description
+> Question 1: Description. Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From XXXX to 20XX, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
 
 -- **Siyu** put ur stuff here
+```{R}
+champions <- allData %>% 
+  filter(Rk == 1)
 
-Analysis: ...
+mean_pt = mean(champions$Pts)
+z_pt = 1.960 #this is the 95% confidence level value
+s_pt = sd(champions$Pts)
+n_pt = nrow(champions)
+CI_pt = mean_pt + c(-1,1) * z_pt * s_pt / sqrt(n_pt)
+gnorm(mean_pt, s_pt, color = 'cyan') +
+  geom_vline(xintercept = CI_pt[1], color = 'hotpink', linetype = 2) +
+  geom_vline(xintercept = CI_pt[2], color = 'hotpink', linetype = 2) +
+  geom_text(aes(CI_pt[1],-0.001,label=round(CI_pt[1]))) +
+  geom_text(aes(CI_pt[2],-0.001,label=round(CI_pt[2]))) +
+  ggtitle('Normal distributions of champions points') +
+  xlab('points')
+```
+Analysis: From the data of XXXX to 20XX, we build the distribution graph, and we estimate that the winning point of 95% confidence interval should be between approximately 74 to 84.
 
 
 > Question 2: Description
