@@ -249,8 +249,50 @@ Now, we also state our 95% confidence interval for the number of Goals.
 > Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 77 and 96 Goals.
 
 
+> Question: How does the winning teams saves and goals compare to non-winning teams?
 
+We now want to start looking at both champion teams and non-champion teams. To do this we will perform another Linear regression on saves vs. goals for champions and non champions in each season.
+ 
+```{r echo=FALSE}
+savesAndGoals <- allData %>%
+  mutate(Rk =
+    case_when(
+      Rk == 1 ~ "Champion",
+      TRUE ~ "Not Champion",
+    )
+  ) %>%
+  group_by(Rk) %>%
+  select(Saves, GF, GA.x, Rk) %>%
+  drop_na()
+  
+savesAndGoals %>%
+  ggplot(aes(x=Saves, y=GF, color=as.factor(Rk))) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method="lm", se = FALSE) +
+  scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
+  labs(color = "Season Champion") +
+  ggtitle("Goals vs Saves", subtitle = "By Chamion and Non-Champion teams") +
+  xlab("Saves (in a season)") +
+  ylab("Goals For (in a season)")
 
+sgChamp <- savesAndGoals %>%
+  filter(Rk == "Champion")
 
+sgNonChamp <- savesAndGoals %>%
+  filter(Rk != "Champion")
 
+champLm <- lm(Saves~GF, sgChamp)
+nonChampLm <-  lm(Saves~GF, sgNonChamp)
+```
 
+```{r echo=FALSE}
+savesAndGoals %>%
+  ggplot(aes(x=Saves, y=GA.x, color=as.factor(Rk))) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method="lm", se = FALSE) +
+  scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
+  labs(color = "Season Champion") +
+  ggtitle("Goals vs Saves", subtitle = "By Chamion and Non-Champion teams") +
+  xlab("Saves (in a season)") +
+  ylab("Goals Against (in a season)")
+```
