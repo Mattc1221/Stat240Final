@@ -105,8 +105,25 @@ gnorm(mean_pt, s_pt, color = 'cyan') +
   ggtitle('Normal distributions of champions points') +
   xlab('points')
 ```
-Analysis: From the data of XXXX to 20XX, we build the distribution graph, and we estimate that the winning point of 95% confidence interval should be between approximately 74 to 84.
+From the distribution graph, we estimate that the winning point of 95% confidence interval should be between approximately 74 to 84.
 
+```{R}
+mean_wins = mean(champions$W.x)
+z_wins = 1.960 #this is the 95% confidence level value
+s_wins = sd(champions$W.x)
+n_wins = nrow(champions)
+CI_wins = mean_wins + c(-1,1) * z_wins * s_wins / sqrt(n_wins)
+gnorm(mean_wins, s_wins, color = 'cyan') +
+  geom_vline(xintercept = CI_wins[1], color = 'hotpink', linetype = 2) +
+  geom_vline(xintercept = CI_wins[2], color = 'hotpink', linetype = 2) +
+  geom_text(aes(CI_wins[1],-0.002,label=round(CI_wins[1]))) +
+  geom_text(aes(CI_wins[2],-0.002,label=round(CI_wins[2]))) +
+  ggtitle('Normal distributions of champions wins') +
+  xlab('Number of Wins')
+```
+From the distribution graph, we estimate that the number of wins of 95% confidence interval should be between approximately 25 to 27.
+
+> Analysis: To conclude, we will have 95% confidence to say that the champion of the current season of La Liga will win 25 to 27 matches and get 74 to 84 points.
 
 > Question 2: Description
 
