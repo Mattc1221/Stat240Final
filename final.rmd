@@ -58,8 +58,9 @@ allData
 
 ## **Introduction**
 
-**NEED TO PUT SOMETHING HERE!**
+Our team decided to conduct our analysis on the La Liga Football League as we all enjoy watching soccer and thought it would be interesting to try and make some sort of prediction on the winner of the current season. We decided that it would be best to analyze past seasons to predict the characteristics of the winner of the current season. 
 
+To begin out approach we will look historicaly into the league to discover the probability that they win the current season. Then we will leverage a 95% confidence interval on a normal distribution of points and wins for the winners of the league. Lastly we will perform a linear regression on the winners of goals and saves vs years to exterpolate an estimation of how many saves and goals the 2020-2021 La Liga champion will have.
 
 ## **Background**
 
