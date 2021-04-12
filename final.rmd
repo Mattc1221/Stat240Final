@@ -87,28 +87,6 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
-```{r echo=FALSE}
-championNames <- allData %>% 
-  filter(Rk == 1) %>%
-  group_by(Squad, Rk) %>%
-  summarize(
-    wins = n()
-  ) %>%
-  ungroup() %>%
-  mutate(pr = wins/sum(wins)) %>%
-  arrange(desc(Rk), desc(wins))
-
-championNames$Squad <- reorder(championNames$Squad, -championNames$pr)
-
-ggplot(championNames, aes(x=Squad, y=pr, fill=factor(Rk))) +
-  geom_col() +
-  scale_fill_manual(values = c("#e05a5e", "#58e0d5")) +
-  xlab("Team") +
-  ylab("Probability of Winning League") +
-  ggtitle("Percentage of Championship Wins", subtitle = "by Team") +
-  theme(legend.position = "none")
-```
-
 > Question 1:
 
 Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From `r min(allData$year)` to `r max(allData$year)`, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
@@ -247,6 +225,38 @@ t.test(ci_b)
 Now, we also state our 95% confidence interval for the number of Goals.
 
 > Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 77 and 96 Goals.
+
+
+
+
+
+
+
+
+
+## Extra Graphs -- Not sure where/how to use
+
+```{r echo=FALSE}
+championNames <- allData %>% 
+  filter(Rk == 1) %>%
+  group_by(Squad, Rk) %>%
+  summarize(
+    wins = n()
+  ) %>%
+  ungroup() %>%
+  mutate(pr = wins/sum(wins)) %>%
+  arrange(desc(Rk), desc(wins))
+
+championNames$Squad <- reorder(championNames$Squad, -championNames$pr)
+
+ggplot(championNames, aes(x=Squad, y=pr, fill=factor(Rk))) +
+  geom_col() +
+  scale_fill_manual(values = c("#e05a5e", "#58e0d5")) +
+  xlab("Team") +
+  ylab("Probability of Winning League") +
+  ggtitle("Percentage of Championship Wins", subtitle = "by Team") +
+  theme(legend.position = "none")
+```
 
 
 > Question: How does the winning teams saves and goals compare to non-winning teams?
