@@ -111,7 +111,7 @@ ggplot(championNames, aes(x=Squad, y=pr, fill=factor(Rk))) +
 
 > Question 1:
 
-Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From XXXX to 20XX, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
+Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From `r min(allData$year)` to `r max(allData$year)`, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
 
 ```{R echo=FALSE}
 champions <- allData %>% 
@@ -131,7 +131,7 @@ gnorm(mean_pt, s_pt, color = 'cyan') +
   xlab('points')
 ```
 
-From the distribution graph, we estimate that the winning point of 95% confidence interval should be between approximately 74 to 84.
+From the distribution graph, we estimate that the winning point of 95% confidence interval should be between approximately `r CI_pt[1]` to `r CI_pt[2]`.
 
 ```{R echo=FALSE}
 mean_wins = mean(champions$W.x)
@@ -148,9 +148,9 @@ gnorm(mean_wins, s_wins, color = 'cyan') +
   xlab('Number of Wins')
 ```
 
-From the distribution graph, we estimate that the number of wins of 95% confidence interval should be between approximately 25 to 27.
+From the distribution graph, we estimate that the number of wins of 95% confidence interval should be between approximately `r CI_wins[1]` to `r CI_wins[2]`.
 
-> Analysis: To conclude, we will have 95% confidence to say that the champion of the current season of La Liga will win 25 to 27 matches and get 74 to 84 points.
+> Analysis: To conclude, we will have 95% confidence to say that the champion of the current season of La Liga will win `r CI_wins[1]` to `r CI_wins[2]` matches and get `r CI_pt[1]` to `r CI_pt[2]` points.
 
 > Question 2: Next, we wanted to look at the number of saves and goals of the champion of the LaLiga over the years. We want to see if we can make a linear regression model to predict the overall saves and goals of the winner. 
 
