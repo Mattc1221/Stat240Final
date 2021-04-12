@@ -87,6 +87,28 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
+```{r echo=FALSE}
+championNames <- allData %>% 
+  filter(Rk == 1) %>%
+  group_by(Squad, Rk) %>%
+  summarize(
+    wins = n()
+  ) %>%
+  ungroup() %>%
+  mutate(pr = wins/sum(wins)) %>%
+  arrange(desc(Rk), desc(wins))
+
+championNames$Squad <- reorder(championNames$Squad, -championNames$pr)
+
+ggplot(championNames, aes(x=Squad, y=pr, fill=factor(Rk))) +
+  geom_col() +
+  scale_fill_manual(values = c("#e05a5e", "#58e0d5")) +
+  xlab("Team") +
+  ylab("Probability of Winning League") +
+  ggtitle("Percentage of Championship Wins", subtitle = "by Team") +
+  theme(legend.position = "none")
+```
+
 > Question 1:
 
 Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From XXXX to 20XX, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
@@ -108,6 +130,7 @@ gnorm(mean_pt, s_pt, color = 'cyan') +
   ggtitle('Normal distributions of champions points') +
   xlab('points')
 ```
+
 From the distribution graph, we estimate that the winning point of 95% confidence interval should be between approximately 74 to 84.
 
 ```{R echo=FALSE}
@@ -124,6 +147,7 @@ gnorm(mean_wins, s_wins, color = 'cyan') +
   ggtitle('Normal distributions of champions wins') +
   xlab('Number of Wins')
 ```
+
 From the distribution graph, we estimate that the number of wins of 95% confidence interval should be between approximately 25 to 27.
 
 > Analysis: To conclude, we will have 95% confidence to say that the champion of the current season of La Liga will win 25 to 27 matches and get 74 to 84 points.
