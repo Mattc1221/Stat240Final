@@ -189,14 +189,15 @@ b <- allData %>%
   filter(allData$Saves != "N/A") %>%
   filter(Rk == "1") %>%
   mutate(year = as.numeric(year)) %>%
-  select(Gls, year)
+  select(GF, year)
 
 b %>%
-  ggplot(aes(x = year, y = Gls)) +
+  ggplot(aes(x = year, y = GF)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
 
-lm1 <- lm(Gls~year, b)
+lm1 <- lm(GF~year, b)
+
 
 library(modelr)
 b <- b %>%
@@ -213,18 +214,18 @@ ggplot(b, aes(x=year, y =resid)) +
 Since the model has a clear linear trend and the residuals are what they are supposed to be, we can now state out linear model.
 
 $$
-Goals = 2.788*year - 5513.918
+Goals = 1.656*year - 3239.866
 $$
 ```{r, include = FALSE}
 ci_b <- b %>%
-  pull(Gls)
+  pull(GF)
 
 t.test(ci_b)
 ```
 
 Now, we also state our 95% confidence interval for the number of Goals.
 
-> Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 77 and 96 Goals.
+> Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 80 and 97 Goals.
 
 
 
