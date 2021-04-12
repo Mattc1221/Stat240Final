@@ -14,7 +14,7 @@ source("./scripts/viridis.R")
 source("./scripts/ggprob.R")
 ```
 
-```{r cache=TRUE, cache.path="cache/", include=TRUE}
+```{r cache=TRUE, cache.path="cache/", include=FALSE}
 # get all dates
 file_list <- list.files(path="./data")
 
@@ -107,7 +107,7 @@ gnorm(mean_pt, s_pt, color = 'cyan') +
 ```
 From the distribution graph, we estimate that the winning point of 95% confidence interval should be between approximately 74 to 84.
 
-```{R}
+```{R echo=FALSE}
 mean_wins = mean(champions$W.x)
 z_wins = 1.960 #this is the 95% confidence level value
 s_wins = sd(champions$W.x)
