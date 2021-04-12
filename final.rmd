@@ -131,10 +131,74 @@ From the distribution graph, we estimate that the number of wins of 95% confiden
 
 Analysis: ...
 
+Now, we wanted to better understand the trends of the goals and saves of the champion of the LaLiga over the years.
 
+```{r}
+a <- allData %>%
+  filter(allData$Saves != "N/A") %>%
+  filter(Rk == "1") %>%
+  mutate(year = as.numeric(year)) %>%
+  select(Saves, year)
 
+a %>%
+  ggplot(aes(x = year, y = Saves)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
 
+lm0 <- lm(Saves~year, a)
 
+library(modelr)
+a <- a %>%
+  add_residuals(lm0) %>%
+  add_predictions(lm0)
+
+ggplot(a, aes(x=year, y =resid)) +
+  geom_point() +
+  xlab("x") +
+  ylab("Residuals") +
+  geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
+```
+
+```{r}
+b <- allData %>%
+  filter(allData$Saves != "N/A") %>%
+  filter(Rk == "1") %>%
+  mutate(year = as.numeric(year)) %>%
+  select(Gls, year)
+
+b %>%
+  ggplot(aes(x = year, y = Gls)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+lm1 <- lm(Gls~year, b)
+
+library(modelr)
+b <- b %>%
+  add_residuals(lm1) %>%
+  add_predictions(lm1)
+
+ggplot(b, aes(x=year, y =resid)) +
+  geom_point() +
+  xlab("x") +
+  ylab("Residuals") +
+  geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
+```
+
+```{r}
+allData %>%
+  filter(allData$Saves != "N/A") %>%
+  filter(Rk == "1") %>%
+  group_by(year) %>%
+  select(Saves, Gls) %>%
+  ggplot(aes(x = Gls, y = Saves)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Saves vs Goals Over the Years")
+
+s <- lm(Saves~Gls, allData)
+summary(s)
+```
 
 
 
