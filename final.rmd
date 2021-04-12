@@ -20,10 +20,7 @@ file_list <- list.files(path="./data")
 
 # load all data
 allData <- data.frame()
-for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
-  if(file_list[i] == "2017-2018" || file_list[i] == "2018-2019" || file_list[i] == "2019-2020"){
-    next
-  }
+for(i in 1:length(file_list)){
   
   # get file names
   league <- paste("./data/", file_list[i], "/LeagueTable.csv", sep="")
@@ -48,8 +45,12 @@ for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
   
   LeagueTable <- LeagueTable %>% 
     top_n(LeagueTable, 20)
-  
   # combine the data into one big table
+  if( i != 1){
+    LeagueTable[setdiff(names(allData), names(LeagueTable))] <- NA
+    allData[setdiff(names(LeagueTable), names(allData))] <- NA
+  }
+  
   allData <- rbind(allData, LeagueTable)
 }
 allData
