@@ -85,10 +85,11 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
-> Question 1: Description. Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From XXXX to 20XX, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
+> Question 1:
 
--- **Siyu** put ur stuff here
-```{R}
+Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From XXXX to 20XX, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
+
+```{R echo=FALSE}
 champions <- allData %>% 
   filter(Rk == 1)
 
@@ -125,15 +126,11 @@ From the distribution graph, we estimate that the number of wins of 95% confiden
 
 > Analysis: To conclude, we will have 95% confidence to say that the champion of the current season of La Liga will win 25 to 27 matches and get 74 to 84 points.
 
-> Question 2: Description
-
--- **Vishnu** put ur stuff here, also check to see if I spelled ur last name right at the top of the doc
-
-Analysis: ...
+> Question 2:
 
 Now, we wanted to better understand the trends of the goals and saves of the champion of the LaLiga over the years.
 
-```{r}
+```{r echo=FALSE}
 a <- allData %>%
   filter(allData$Saves != "N/A") %>%
   filter(Rk == "1") %>%
@@ -159,7 +156,7 @@ ggplot(a, aes(x=year, y =resid)) +
   geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
 
-```{r}
+```{r echo=FALSE}
 b <- allData %>%
   filter(allData$Saves != "N/A") %>%
   filter(Rk == "1") %>%
@@ -185,7 +182,7 @@ ggplot(b, aes(x=year, y =resid)) +
   geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
 
-```{r}
+```{r echo=FALSE}
 allData %>%
   filter(allData$Saves != "N/A") %>%
   filter(Rk == "1") %>%
