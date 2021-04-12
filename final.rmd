@@ -126,11 +126,11 @@ From the distribution graph, we estimate that the number of wins of 95% confiden
 
 > Analysis: To conclude, we will have 95% confidence to say that the champion of the current season of La Liga will win 25 to 27 matches and get 74 to 84 points.
 
-> Question 2:
+> Question 2: Next, we wanted to look at the number of saves and goals of the champion of the LaLiga over the years. We want to see if we can make a linear regression model to predict the overall saves and goals of the winner. 
 
-Now, we wanted to better understand the trends of the goals and saves of the champion of the LaLiga over the years.
+First, we look at the number of Saves of the champion over the years. 
 
-```{r echo=FALSE}
+```{r, echo = FALSE}
 a <- allData %>%
   filter(allData$Saves != "N/A") %>%
   filter(Rk == "1") %>%
@@ -141,6 +141,12 @@ a %>%
   ggplot(aes(x = year, y = Saves)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
+
+```
+
+Just from looking at the graph, we can recognize that it has a pretty strong linear trend. So, now we look at the residuals so we can make sure those residuals follow an approximate normal distribution and no strong pattern.
+
+```{r, echo = FALSE}
 
 lm0 <- lm(Saves~year, a)
 
@@ -156,7 +162,25 @@ ggplot(a, aes(x=year, y =resid)) +
   geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
 
-```{r echo=FALSE}
+Since, the residuals are what they are supposed to be, we can state our linear model.
+
+$$
+Saves = -2.516*year + 5159.044
+$$
+```{r, include = FALSE}
+ci_a <- a %>%
+  pull(Saves)
+
+t.test(ci_a)
+```
+
+However, these are only point estimates, so we will use a 95% confidence level to show our final results.
+
+> Analysis: To conclude, our 95% confidence interval for the number of Saves will be between 95 and 116 saves.
+
+Next, we want to look at the trend of Goals of the champion over the years. So, we will perform the same calculations as seen above.
+
+```{r, echo = FALSE}
 b <- allData %>%
   filter(allData$Saves != "N/A") %>%
   filter(Rk == "1") %>%
@@ -182,20 +206,21 @@ ggplot(b, aes(x=year, y =resid)) +
   geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
 
-```{r echo=FALSE}
-allData %>%
-  filter(allData$Saves != "N/A") %>%
-  filter(Rk == "1") %>%
-  group_by(year) %>%
-  select(Saves, Gls) %>%
-  ggplot(aes(x = Gls, y = Saves)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  ggtitle("Saves vs Goals Over the Years")
+Since the model has a clear linear trend and the residuals are what they are supposed to be, we can now state out linear model.
 
-s <- lm(Saves~Gls, allData)
-summary(s)
+$$
+Goals = 2.788*year - 5513.918
+$$
+```{r, include = FALSE}
+ci_b <- b %>%
+  pull(Gls)
+
+t.test(ci_b)
 ```
+
+Now, we also state our 95% confidence interval for the number of Goals.
+
+> Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 77 and 96 Goals.
 
 
 
