@@ -10,6 +10,8 @@ Matthew Chiang, Siyu Huang, Vishnu Yaragadda
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 library(tidyverse)
 library(lubridate)
+library(modelr)
+library(gtools)
 source("./scripts/viridis.R")
 source("./scripts/ggprob.R")
 ```
@@ -20,10 +22,7 @@ file_list <- list.files(path="./data")
 
 # load all data
 allData <- data.frame()
-for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
-  if(file_list[i] == "2017-2018" || file_list[i] == "2018-2019" || file_list[i] == "2019-2020"){
-    next
-  }
+for(i in 1:length(file_list)){
   
   # get file names
   league <- paste("./data/", file_list[i], "/LeagueTable.csv", sep="")
@@ -48,8 +47,12 @@ for(i in 1:length(file_list)){ # REPLACE 15:16 with  1:length(file_list)
   
   LeagueTable <- LeagueTable %>% 
     top_n(LeagueTable, 20)
-  
   # combine the data into one big table
+  if( i != 1){
+    LeagueTable[setdiff(names(allData), names(LeagueTable))] <- NA
+    allData[setdiff(names(LeagueTable), names(allData))] <- NA
+  }
+  
   allData <- rbind(allData, LeagueTable)
 }
 allData
@@ -57,8 +60,7 @@ allData
 
 ## **Introduction**
 
-**NEED TO PUT SOMETHING HERE!**
-
+Our team decided to conduct our analysis on the La Liga Football League as we all enjoy watching soccer and thought it would be interesting to try and make some sort of prediction on the winner of the current season. We decided that it would be best to analyze past seasons to predict the characteristics of the winner of the current season. To begin out approach we will look historicaly into the league to discover the probability that they win the current season. Then we will leverage a 95% confidence interval on a normal distribution of points and wins for the winners of the league. Lastly we will perform a linear regression on the winners of goals and saves vs years to exterpolate an estimation of how many saves and goals the 2020-2021 La Liga champion will have.
 
 ## **Background**
 
@@ -85,26 +87,94 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
-> Question 1:
 
-Firstly, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From XXXX to 20XX, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
+> Question 1: What teams have won in the past?
+
+First, we want to narrow our analysis by looking at the history of the La Liga Soccer League. To do this we will calculate the percentage of championship wins each team has.
+
+```{r echo=FALSE}
+championNames <- allData %>% 
+  filter(Rk == 1) %>%
+  group_by(Squad, Rk) %>%
+  summarize(
+    wins = n()
+  ) %>%
+  ungroup() %>%
+  mutate(pr = wins/sum(wins)) %>%
+  arrange(desc(Rk), desc(wins))
+
+championNames$Squad <- reorder(championNames$Squad, -championNames$pr)
+
+ggplot(championNames, aes(x=Squad, y=pr, fill=factor(Rk))) +
+  geom_col() +
+  scale_fill_manual(values = c("#e05a5e", "#58e0d5")) +
+  xlab("Team") +
+  ylab("Probability of Winning League") +
+  ggtitle("Percentage of Championship Wins", subtitle = "by Team") +
+  theme(legend.position = "none")
+```
+
+From this graph it is clear that `r championNames$Squad[1]` and `r championNames$Squad[2]` have a overwhelming win rate compared to the other teams in the league, historically winning `r (championNames$pr[1] + championNames$pr[2])*100`% of the time. With this realization, specify our analysis more narrowly to check characteristics for when the champion is `r championNames$Squad[1]`, `r championNames$Squad[2]`, or other winners.
+
+> Question 2: 
+
+Second, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From `r min(allData$year)` to `r max(allData$year)`, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
 
 ```{R echo=FALSE}
-champions <- allData %>% 
+champions <- allData %>%
   filter(Rk == 1)
 
-mean_pt = mean(champions$Pts)
-z_pt = 1.960 #this is the 95% confidence level value
-s_pt = sd(champions$Pts)
-n_pt = nrow(champions)
-CI_pt = mean_pt + c(-1,1) * z_pt * s_pt / sqrt(n_pt)
-gnorm(mean_pt, s_pt, color = 'cyan') +
-  geom_vline(xintercept = CI_pt[1], color = 'hotpink', linetype = 2) +
-  geom_vline(xintercept = CI_pt[2], color = 'hotpink', linetype = 2) +
-  geom_text(aes(CI_pt[1],-0.001,label=round(CI_pt[1]))) +
-  geom_text(aes(CI_pt[2],-0.001,label=round(CI_pt[2]))) +
-  ggtitle('Normal distributions of champions points') +
-  xlab('points')
+champions1 <- champions%>%
+  summarize(
+    mean_pt = mean(Pts),
+    z_pt = 1.960, #this is the 95% confidence level value
+    s_pt = sd(Pts),
+    n_pt = n(),
+    CI_pt = mean_pt + c(-1,1) * z_pt * s_pt / sqrt(n_pt)
+  )
+
+ggplot(champions1)+
+  geom_norm_density(mu=mean_pt,sigma=s_pt,a=NULL,b=NULL, color="#000000") +
+  geom_norm_fill(mu=mean_pt,sigma=s_pt,a=NULL,b=NULL,fill="#000000", alpha = 0.1) +
+  geom_vline(xintercept = CI_pt[1], linetype = 2, color="#888888") +
+  geom_vline(xintercept = CI_pt[2], linetype = 2, color="#888888") +
+  geom_text(aes(CI_pt[1],-0.002,label=round(CI_pt[1]))) +
+  geom_text(aes(CI_pt[2],-0.002,label=round(CI_pt[2]))) +
+  geom_hline(yintercept=0) +
+  ylab('Density') +
+  xlab('Points In A Season')
+```
+
+```{r echo=FALSE}
+champions2 <- champions %>%
+  mutate(Squad =
+    case_when(
+      Squad == championNames$Squad[1] ~ Squad,
+      Squad == championNames$Squad[2] ~ Squad,
+      TRUE ~ "Other"
+    )
+  ) %>%
+  group_by(Squad)%>%
+  summarize(
+    mean_pt = mean(Pts),
+    z_pt = 1.960, #this is the 95% confidence level value
+    s_pt = sd(Pts),
+    n_pt = n(),
+    lower = mean_pt - z_pt * s_pt / sqrt(n_pt),
+    upper = mean_pt + z_pt * s_pt / sqrt(n_pt)
+  )
+
+ggplot(champions2, color="#58e0d5", fill="#58e0d5")+
+    geom_norm_density(mu=mean_pt,sigma=s_pt,a=NULL,b=NULL, color="#58e0d5") +
+    geom_norm_fill(mu=mean_pt,sigma=s_pt,a=NULL,b=NULL,fill="#58e0d5", alpha = 0.1) +
+    geom_vline(xintercept = CI_pt[1], linetype = 2, color="#888888") +
+    geom_vline(xintercept = CI_pt[2], linetype = 2, color="#888888") +
+    geom_text(aes(lower,-0.002,label=round(lower))) +
+    geom_text(aes(upper,-0.002,label=round(upper))) +
+    facet_wrap(~ Squad) +
+    geom_hline(yintercept=0) +
+    ylab('Density') +
+    xlab('Points In A Season')
 ```
 From the distribution graph, we estimate that the winning point of 95% confidence interval should be between approximately 74 to 84.
 
@@ -130,6 +200,7 @@ From the distribution graph, we estimate that the number of wins of 95% confiden
 
 Now, we wanted to better understand the trends of the goals and saves of the champion of the LaLiga over the years.
 
+
 ```{r echo=FALSE}
 a <- allData %>%
   filter(allData$Saves != "N/A") %>%
@@ -144,7 +215,6 @@ a %>%
 
 lm0 <- lm(Saves~year, a)
 
-library(modelr)
 a <- a %>%
   add_residuals(lm0) %>%
   add_predictions(lm0)
@@ -170,7 +240,6 @@ b %>%
 
 lm1 <- lm(Gls~year, b)
 
-library(modelr)
 b <- b %>%
   add_residuals(lm1) %>%
   add_predictions(lm1)
@@ -183,15 +252,28 @@ ggplot(b, aes(x=year, y =resid)) +
 ```
 
 ```{r echo=FALSE}
-allData %>%
+savesToGoals <- allData %>%
   filter(allData$Saves != "N/A") %>%
   filter(Rk == "1") %>%
+  mutate(Squad =
+    case_when(
+      Squad == championNames$Squad[1] ~ Squad,
+      Squad == championNames$Squad[2] ~ Squad,
+      TRUE ~ "Other"
+    )
+  ) %>%
   group_by(year) %>%
-  select(Saves, Gls) %>%
-  ggplot(aes(x = Gls, y = Saves)) +
+  mutate(ratio = Saves/Gls) %>%
+  select(ratio, year, Squad)
+
+ggplot(savesToGoals, aes(x = year, y = ratio, color=Squad)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  ggtitle("Saves vs Goals Over the Years")
+  ggtitle("Saves/Goals of Winners Over the Years") +
+  ylab("Saves to Goals Ratio") +
+  xlab("Year")
+
+savesToGoals
 
 s <- lm(Saves~Gls, allData)
 summary(s)
