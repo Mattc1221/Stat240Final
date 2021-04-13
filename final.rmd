@@ -174,8 +174,8 @@ a <- allData %>%
 a %>%
   ggplot(aes(x = year, y = Saves)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
-
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Number of Saves of Champion")
 ```
 
 Just from looking at the graph, we can recognize that it has a pretty strong linear trend. So, now we look at the residuals so we can make sure those residuals follow an approximate normal distribution and no strong pattern.
@@ -191,7 +191,7 @@ a <- a %>%
 
 ggplot(a, aes(x=year, y =resid)) +
   geom_point() +
-  xlab("x") +
+  xlab("Years") +
   ylab("Residuals") +
   geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
@@ -224,7 +224,9 @@ b <- allData %>%
 b %>%
   ggplot(aes(x = year, y = GF)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+  geom_smooth(method = "lm", se = FALSE) +
+  ylab("Goals") +
+  ggtitle("Number of Goals of Champion")
 
 lm1 <- lm(GF~year, b)
 
@@ -236,7 +238,7 @@ b <- b %>%
 
 ggplot(b, aes(x=year, y =resid)) +
   geom_point() +
-  xlab("x") +
+  xlab("Years") +
   ylab("Residuals") +
   geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
