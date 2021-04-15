@@ -274,7 +274,7 @@ When considering what makes a good soccer team, there are obviously more factors
 
 <!-- We now want to start looking at both champion teams and non-champion teams. To do this we will perform another Linear regression on saves vs. goals for champions and non champions in each season. -->
  
-```{r include=FALSE}
+```{r include=TRUE}
 savesAndGoals <- allData %>%
   mutate(Rk =
     case_when(
@@ -304,9 +304,10 @@ sgNonChamp <- savesAndGoals %>%
 
 champLm <- lm(Saves~GF, sgChamp)
 nonChampLm <-  lm(Saves~GF, sgNonChamp)
+summary(lm(Saves~GF+Rk, savesAndGoals))
 ```
 
-```{r include=FALSE}
+```{r include=TRUE}
 savesAndGoals %>%
   ggplot(aes(x=Saves, y=GA.x, color=as.factor(Rk))) +
   geom_point(alpha = 0.5) +
