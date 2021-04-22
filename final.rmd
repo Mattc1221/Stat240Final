@@ -318,3 +318,62 @@ savesAndGoals %>%
   xlab("Saves (in a season)") +
   ylab("Goals Against (in a season)")
 ```
+
+
+
+For each champion team of each season, they have a top scorer that scores more goals than other players in the team and this consists of a sizable proportion of total goals of the team. 
+```{R}
+top_scorer <- champions %>% 
+  mutate(top_scorer_goals = as.numeric(str_trim(str_sub(Top.Team.Scorer, -2, -1)))) %>% 
+  # mutate(t2 = str_extract(Top.Team.Scorer, "[\d+][?!.*\d]$")) %>% 
+  mutate(prop = top_scorer_goals / GF) %>% 
+  mutate(year = as.numeric(year)) %>% 
+  select(Squad, top_scorer_goals, GF, prop, year)
+ggplot(top_scorer, aes(x=year, y=prop)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "hotpink") +
+  ggtitle("The proportion of goals by top scorer in each seasons") +
+  labs(x="Season", y="The proportion of goals by top scorer")
+```
+
+```{R}
+top_scorer2 <- allData %>%
+  mutate(Rk = case_when(Rk == 1 ~ "Champion", 
+                        TRUE ~ "Not Champion",)) %>%
+  mutate(top_scorer_goals = as.numeric(str_trim(str_sub(Top.Team.Scorer, -2, -1)))) %>% 
+  mutate(prop = top_scorer_goals / GF) %>% 
+  mutate(year = as.numeric(year)) %>% 
+  select(Rk, top_scorer_goals, GF, prop, year)
+
+not_champion_top_scorer <- top_scorer2 %>% 
+  filter(Rk == "Not Champion") %>% 
+  group_by(year) %>% 
+  summarise(not_champion_prop = mean(prop))
+champion_top_scorer <- top_scorer2 %>% 
+  filter(Rk == "Champion") %>% 
+  group_by(year) %>% 
+  summarise(champion_prop = mean(prop)) %>% 
+  inner_join(not_champion_top_scorer)
+
+ggplot(top_scorer2, aes(x=year, y=prop, color=as.factor(Rk))) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method="lm", se = FALSE) +
+  scale_color_manual(values = c("darkgoldenrod", "blue")) +
+  ggtitle("The proportion of goals by top scorer in each seasons") +
+  labs(x="Season", y="The proportion of goals by top scorer", color = "Season Champion")
+```
+
+- expect: a high top scorer for champion teams
+- do 2 sample proportion t tests.
+```{R}
+# lm_s = lm()
+t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop, alternative = "greater")
+
+# top_scorer2 %>% 
+#   group_by(Rk) %>% 
+#   summarise(sum_top_scorer = sum(top_scorer_goals),
+#             sum_GF = sum(GF))
+# prop.test(c(858, 8118), c(2794, 29612))
+```
+
+From the observation of the graph, we assume that the proportion of top scorer's goals in champions teams tend to be higher than those of non-champions teams. To verify our guess, we perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the the t-test, we found that the p-value is 0.01166 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams.
