@@ -384,13 +384,13 @@ t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop,
 
 From the observation of the graph, we assume that the proportion of top scorer's goals in champions teams tend to be higher than those of non-champions teams. To verify our guess, we perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the t-test, we found that the p-value is 0.01166 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams.
 
-> How about the trend of this proportion we just talked about?
+<!-- > How about the trend of this proportion we just talked about? -->
 
 ```{R echo=FALSE}
-ggplot(top_scorer2, aes(x=year, y=prop, color=as.factor(Rk))) +
-  geom_point(alpha = 0.7) +
-  geom_smooth(method="lm", se = FALSE) +
-  scale_color_manual(values = c("darkgoldenrod", "blue")) +
-  ggtitle("The proportion of goals by top scorer in each seasons") +
-  labs(x="Season", y="The proportion of goals by top scorer", color = "Season Champion")
+# ggplot(top_scorer2, aes(x=year, y=prop, color=as.factor(Rk))) +
+#   geom_point(alpha = 0.7) +
+#   geom_smooth(method="lm", se = FALSE) +
+#   scale_color_manual(values = c("darkgoldenrod", "blue")) +
+#   ggtitle("The proportion of goals by top scorer in each seasons") +
+#   labs(x="Season", y="The proportion of goals by top scorer", color = "Season Champion")
 ```
