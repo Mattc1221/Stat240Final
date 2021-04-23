@@ -361,12 +361,13 @@ champion_top_scorer <- top_scorer2 %>%
 ```
 
 ```{R echo=FALSE}
-champion_top_scorer2 = gather(champion_top_scorer, event, total, champion_prop:not_champion_prop)
+champion_top_scorer2 = gather(champion_top_scorer, event, total, champion_prop:not_champion_prop) %>% 
+  mutate(`Season Champion` = event)
 # champion_top_scorer2
-ggplot(champion_top_scorer2, aes(year, total, fill=event)) +
-  geom_bar(stat = "identity", position = 'dodge') +
+ggplot(champion_top_scorer2, aes(x=`Season Champion`, y=total, fill=`Season Champion`)) +
+  geom_boxplot() +
   ggtitle("Comparison between champions and other teams", subtitle = ":the proportion of goals by top scorer in each seasons") +
-  labs(x="Season", y="The proportion of goals by top scorer", color = "Season Champion")
+  labs(x="Champions or not", y="The proportion of goals by top scorer", color = "Season Champion") 
 ```
 
 
