@@ -399,7 +399,7 @@ From the observation of the graph, we assume that the proportion of top scorer's
 
 It's reasonable to assume that a winning team would have a higher possession rate as that would give the team more chances to score. So, we wanted to test that:
 
-```{r, echo = False}
+```{r, echo = FALSE}
 poss <- allData %>%
   filter(Poss != "NA") %>%
   mutate(Rk = case_when(Rk <= 3 ~ "Top Teams", 
@@ -447,12 +447,10 @@ poss1 <- allData %>%
 mean0 <- mean(poss0)
 sd0 <- sd(poss0)
 n0 <- length(poss0)
-c(mean0,sd0, n0)
 
 mean1 <- mean(poss1)
 sd1 <- sd(poss1)
 n1 <- length(poss1)
-c(mean1,sd1, n1)
 
 ## Assuming the null is true
 se <- sqrt(sd0^2/n0+sd1^2/n1)
