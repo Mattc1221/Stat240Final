@@ -87,83 +87,94 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
+> Question 3: 
+Lastly, we wanted to look at the number of saves and goals of the champion of the LaLiga over the years. We want to see if we can make a linear regression model to predict the overall saves and goals of the winner. 
 
-> To start our analysis, we wil look to see if the championship team's ratio of Goals Against to Saves is lower than non-championship teams.
+First, we look at the number of Saves of the champion over the years. 
 
-To answer this question, we will plot Goals_Against/Saves over time for both Champion and non Champion team.
- 
-```{r echo=FALSE}
-savesAndGoals <- allData %>%
-  mutate(Rk =
-    case_when(
-      Rk == 1 ~ "Champion",
-      TRUE ~ "Not Champion",
-    ),
-    ratio = GA.x/Saves
-  ) %>%
-  group_by(Rk) %>%
-  select(Rk, year, ratio) %>%
-  drop_na()
-  
-savesAndGoals %>%
-  ggplot(aes(x=as.numeric(year), y=ratio, color=as.factor(Rk))) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method="lm", se = FALSE) +
-  scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
-  labs(color = "Season Champion") +
-  ggtitle("Goals Against/Saves vs Time", subtitle = "By Chamion and Non-Champion teams") +
-  xlab("Year") +
-  ylab("Goals Agaisnt over Saves (in a season)")
+```{r, echo = FALSE}
+a <- allData %>%
+  filter(allData$Saves != "N/A") %>%
+  filter(Rk == "1") %>%
+  mutate(year = as.numeric(year)) %>%
+  select(Saves, year)
+a %>%
+  ggplot(aes(x = year, y = Saves)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Number of Saves of Champion")
 ```
 
-To check if the above graph is statistically significant we can perform a t test. If the p-value of the t test is less than our alpha (0.05) we can reject the null hypothesis.
+Just from looking at the graph, we can recognize that it has a pretty strong linear trend. So, now we look at the residuals so we can make sure those residuals follow an approximate normal distribution and no strong pattern.
 
-```{r echo=FALSE}
-champ <- savesAndGoals %>%
-  filter(Rk == "Champion")
-
-nonChamp <- savesAndGoals %>%
-  filter(Rk == "Not Champion")
-
-ttest = t.test(champ$ratio, nonChamp$ratio)
-ttest
-```
-The p-value from our test was `r ttest$p.value`, which is less than 0.05 so we can reject the null hypothesis that the non-championship team's ratio equals the championship teams ratio. From the t test we can also say with 95% confidence that the championship teams ratio of Goals Against to Saves will be 0.061344 to 0.1301 below the ratio of non championship teams. This means that the number of Saves a team has in a season in more important because Saves is the denominator that is creating the smaller value, leading us to the conclusion that defensive plays a higher factor than offense.
-
-```{r echo=FALSE}
-savesAndGoals <- allData %>%
-  mutate(Rk =
-    case_when(
-      Rk == 1 ~ "Champion",
-      TRUE ~ "Not Champion",
-    ),
-    ratio = GF/Saves
-  ) %>%
-  group_by(Rk) %>%
-  select(Rk, year, ratio) %>%
-  drop_na()
-  
-savesAndGoals %>%
-  ggplot(aes(x=as.numeric(year), y=ratio, color=as.factor(Rk))) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method="lm", se = FALSE) +
-  scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
-  labs(color = "Season Champion") +
-  ggtitle("Goals Against/Saves vs Time", subtitle = "By Chamion and Non-Champion teams") +
-  xlab("Year") +
-  ylab("Goals Agaisnt over Saves (in a season)")
+```{r, echo = FALSE}
+lm0 <- lm(Saves~year, a)
+library(modelr)
+a <- a %>%
+  add_residuals(lm0) %>%
+  add_predictions(lm0)
+ggplot(a, aes(x=year, y =resid)) +
+  geom_point() +
+  xlab("Years") +
+  ylab("Residuals") +
+  geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
 
-```{r echo=FALSE}
-champ <- savesAndGoals %>%
-  filter(Rk == "Champion")
+Since, the residuals are what they are supposed to be, we can state our linear model.
 
-nonChamp <- savesAndGoals %>%
-  filter(Rk == "Not Champion")
-
-ttest = t.test(champ$ratio, nonChamp$ratio)
-ttest
+$$
+Saves = -2.516*year + 5159.044
+$$
+```{r, include = FALSE}
+ci_a <- a %>%
+  pull(Saves)
+t.test(ci_a)
 ```
+
+However, these are only point estimates, so we will use a 95% confidence level to show our final results.
+
+> Analysis: To conclude, our 95% confidence interval for the number of Saves will be between 95 and 116 saves.
+Next, we want to look at the trend of Goals of the champion over the years. So, we will perform the same calculations as seen above.
+
+```{r, echo = FALSE}
+b <- allData %>%
+  filter(allData$Saves != "N/A") %>%
+  filter(Rk == "1") %>%
+  mutate(year = as.numeric(year)) %>%
+  select(GF, year)
+b %>%
+  ggplot(aes(x = year, y = GF)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ylab("Goals") +
+  ggtitle("Number of Goals of Champion")
+lm1 <- lm(GF~year, b)
+library(modelr)
+b <- b %>%
+  add_residuals(lm1) %>%
+  add_predictions(lm1)
+ggplot(b, aes(x=year, y =resid)) +
+  geom_point() +
+  xlab("Years") +
+  ylab("Residuals") +
+  geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
+```
+
+Since the model has a clear linear trend and the residuals are what they are supposed to be, we can now state out linear model.
+
+$$
+Goals = 1.656*year - 3239.866
+$$
+```{r, include = FALSE}
+ci_b <- b %>%
+  pull(GF)
+t.test(ci_b)
+```
+
+Now, we also state our 95% confidence interval for the number of Goals.
+
+> Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 80 and 97 Goals.
+
 
 > Another potential characteristic of the winner of a season is the proportion of goals by top scorer among total goals of the team. 
 
