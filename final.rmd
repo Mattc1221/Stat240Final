@@ -53,7 +53,8 @@ for(i in 1:length(file_list)){
   }
   allData <- rbind(allData, LeagueTable)
 }
-allData
+allData <- allData %>%
+  select(Rk, Squad, W.x, D.x, L.x, GF, GA.x, Top.Team.Scorer, Poss, Saves,year)
 ```
 
 ## **Introduction**
@@ -74,7 +75,23 @@ We found data for the La Liga Soccer League. Each season from 1988-2020, there a
 
 > Final Data: 
 
-We had to collect the above data for the seasons between 1988-2020. We combined all of the data into one large dataframe by the team name and created a year column to keep track of which teams data cooresponds to which year.
+We had to collect the above data for the seasons between 1988-2020. We combined all of the data into one large dataframe called allData by the team name and created a year column to keep track of which teams data corresponds to which year. Then, we trimmed most of the variables in that large data set away and only selected the ones that were used in the analysis. 
+
+**allData** contains the variables described below:
+
+Variable| Description
+----------------|------------
+year|Season year 
+Rk|Rank of each team for that season
+Squad|Team Name
+W.x|Number of wins for that team during season
+L.x|Number of losses for that team during season
+D.x|Number of draws for that team during season
+GF|Total number of goals the team scored during season
+GA.x|Total number of goals the team conceded during season
+Top.Team.Scorer|Name of team's top scorer during season
+Poss|Average Rate of Possession of the ball during season
+Saves|Total number of saves the team had during season
 
 > Data Citation:
 
