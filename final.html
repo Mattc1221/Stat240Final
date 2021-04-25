@@ -198,8 +198,8 @@ summary {
 </div>
 <div id="introduction" class="section level2">
 <h2><strong>Introduction</strong></h2>
-<p>“People cry when their team lose, and they cry even more when their team win.” Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer league in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona, el clásico. Our team members are also fans of this soccer league and we decide to have a research to the data of La Liga. In the history, nine teams have been crowned champions, and we are curious about what are their common characteristics from past seasons.</p>
-<p>To begin out approach we will look historically into the league to discover the probability that they win the current season. Then we will leverage a 95% confidence interval on a normal distribution of points and wins for the winners of the league. Lastly we will perform a linear regression on the winners of goals and saves vs years to extrapolate an estimation of how many saves and goals the 2020-2021 La Liga champion will have.</p>
+<p>“People cry when their team lose, and they cry even more when their team win.” Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer league in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona, el clásico. Our team members are also fans of this soccer league and we decide to have a research about the data of La Liga. In the history, nine teams have been crowned champions, and we are curious about what are their common characteristics from past seasons.</p>
+<p>To begin out approach we will look historically into the league to perform a linear regression on the winners of goals and saves vs years. Then we will look into the top scorer’s goals among the total goals because there is always a striker in the team that takes the responsibility of goals. Lastly we will see if the possession rates for champions are higher than other teams.</p>
 </div>
 <div id="background" class="section level2">
 <h2><strong>Background</strong></h2>
@@ -215,7 +215,62 @@ summary {
 <blockquote>
 <p>Final Data:</p>
 </blockquote>
-<p>We had to collect the above data for the seasons between 1988-2020. We combined all of the data into one large dataframe by the team name and created a year column to keep track of which teams data cooresponds to which year.</p>
+<p>We had to collect the above data for the seasons between 1988-2020. We combined all of the data into one large dataframe called allData by the team name and created a year column to keep track of which teams data corresponds to which year. Then, we trimmed most of the variables in that large data set away and only selected the ones that were used in the analysis.</p>
+<p><strong>allData</strong> contains the variables described below:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>year</td>
+<td>Season year</td>
+</tr>
+<tr class="even">
+<td>Rk</td>
+<td>Rank of each team for that season</td>
+</tr>
+<tr class="odd">
+<td>Squad</td>
+<td>Team Name</td>
+</tr>
+<tr class="even">
+<td>W.x</td>
+<td>Number of wins for that team during season</td>
+</tr>
+<tr class="odd">
+<td>L.x</td>
+<td>Number of losses for that team during season</td>
+</tr>
+<tr class="even">
+<td>D.x</td>
+<td>Number of draws for that team during season</td>
+</tr>
+<tr class="odd">
+<td>GF</td>
+<td>Total number of goals the team scored during season</td>
+</tr>
+<tr class="even">
+<td>GA.x</td>
+<td>Total number of goals the team conceded during season</td>
+</tr>
+<tr class="odd">
+<td>Top.Team.Scorer</td>
+<td>Name of team’s top scorer during season</td>
+</tr>
+<tr class="even">
+<td>Poss</td>
+<td>Average Rate of Possession of the ball during season</td>
+</tr>
+<tr class="odd">
+<td>Saves</td>
+<td>Total number of saves the team had during season</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p>Data Citation:</p>
 </blockquote>

@@ -59,7 +59,7 @@ allData <- allData %>%
 
 ## **Introduction**
 
-"People cry when their team lose, and they cry even more when their team win." Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer league in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona, el clásico. Our team members are also fans of this soccer league and we decide to have a research about the data of La Liga. In the history, nine teams have been crowned champions, and we are curious about what are their common characteristics from past seasons.
+"People cry when their team lose, and they cry even more when their team win." Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer league in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona, el clásico. Our team members are also fans of this soccer league and we decide to have a research about the data of La Liga. In the history, nine teams have been crowned champions, and we are curious about their common characteristics from past seasons, and we make predictions of these aspects for next season's champion. 
 
 To begin out approach we will look historically into the league to perform a linear regression on the winners of goals and saves vs years. Then we will look into the top scorer's goals among the total goals because there is always a striker in the team that takes the responsibility of goals. Lastly we will see if the possession rates for champions are higher than other teams.
 
