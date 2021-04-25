@@ -115,6 +115,7 @@ savesAndGoals %>%
   xlab("Year") +
   ylab("Goals Agaisnt over Saves (in a season)")
 ```
+
 To check if the above graph is statistically significant we can perform a t test. If the p-value of the t test is less than our alpha (0.05) we can reject the null hypothesis.
 
 ```{r echo=FALSE}
@@ -128,6 +129,41 @@ ttest = t.test(champ$ratio, nonChamp$ratio)
 ttest
 ```
 The p-value from our test was `r ttest$p.value`, which is less than 0.05 so we can reject the null hypothesis that the non-championship team's ratio equals the championship teams ratio. From the t test we can also say with 95% confidence that the championship teams ratio of Goals Against to Saves will be 0.061344 to 0.1301 below the ratio of non championship teams. This means that the number of Saves a team has in a season in more important because Saves is the denominator that is creating the smaller value, leading us to the conclusion that defensive plays a higher factor than offense.
+
+```{r echo=FALSE}
+savesAndGoals <- allData %>%
+  mutate(Rk =
+    case_when(
+      Rk == 1 ~ "Champion",
+      TRUE ~ "Not Champion",
+    ),
+    ratio = GF/Saves
+  ) %>%
+  group_by(Rk) %>%
+  select(Rk, year, ratio) %>%
+  drop_na()
+  
+savesAndGoals %>%
+  ggplot(aes(x=as.numeric(year), y=ratio, color=as.factor(Rk))) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method="lm", se = FALSE) +
+  scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
+  labs(color = "Season Champion") +
+  ggtitle("Goals Against/Saves vs Time", subtitle = "By Chamion and Non-Champion teams") +
+  xlab("Year") +
+  ylab("Goals Agaisnt over Saves (in a season)")
+```
+
+```{r echo=FALSE}
+champ <- savesAndGoals %>%
+  filter(Rk == "Champion")
+
+nonChamp <- savesAndGoals %>%
+  filter(Rk == "Not Champion")
+
+ttest = t.test(champ$ratio, nonChamp$ratio)
+ttest
+```
 
 > Another potential characteristic of the winner of a season is the proportion of goals by top scorer among total goals of the team. 
 
