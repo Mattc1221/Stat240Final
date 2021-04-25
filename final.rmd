@@ -87,247 +87,53 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
-# TODO: remove this question entirely
-> Question 1: 
 
-It is pretty well known that the winning teams of the La Liga tournament are typically one of Barcelona and Real Madrid. We decided to find the probabilities that each of these teams would in, given a past season.
+> To start our analysis, we wil look to see if the championship team's ratio of Goals Against to Saves is lower than non-championship teams.
 
-```{r echo=FALSE}
-championNames <- allData %>% 
-  filter(Rk == 1) %>%
-  group_by(Squad, Rk) %>%
-  summarize(
-    wins = n()
-  ) %>%
-  ungroup() %>%
-  mutate(pr = wins/sum(wins)) %>%
-  arrange(desc(Rk), desc(wins))
-
-championNames$Squad <- reorder(championNames$Squad, -championNames$pr)
-
-ggplot(championNames, aes(x=Squad, y=pr, fill=factor(Rk))) +
-  geom_col() +
-  scale_fill_manual(values = c("#e05a5e", "#58e0d5")) +
-  xlab("Team") +
-  ylab("Probability of Winning League") +
-  ggtitle("Percentage of Championship Wins", subtitle = "by Team") +
-  theme(legend.position = "none")
-```
-
-Analysis:  There is a `r championNames$pr[1]*100`% chance that the winning team will be Barcelona, `r championNames$pr[2]*100`% chance that it will be Real Madrid, and `r (sum(championNames$pr)-(championNames$pr[1] + championNames$pr[2]))*100`% chance it will be one of the other teams.
-
-# TODO: remove this question entirely
-> Question 2:
-
-Next, we want to analyze the most direct factor that decides La Liga's winner of each season, that is the points each team get after 38 matches. In this league system, teams receive three points for a win, one point for a draw, and no points for a loss. Teams are ranked by total points, with the highest-ranked club at the end of the season crowned champion. From `r min(allData$year)` to `r max(allData$year)`, each winner's final point are gathered and we do the confidence interval on distribution to estimate the number of points that a champion should get. 
-
-```{R echo=FALSE}
-champions <- allData %>% 
-  filter(Rk == 1)
-
-mean_pt = mean(champions$Pts)
-z_pt = 1.960 #this is the 95% confidence level value
-s_pt = sd(champions$Pts)
-n_pt = nrow(champions)
-CI_pt = mean_pt + c(-1,1) * z_pt * s_pt / sqrt(n_pt)
-gnorm(mean_pt, s_pt, color = 'cyan') +
-  geom_vline(xintercept = CI_pt[1], color = 'hotpink', linetype = 2) +
-  geom_vline(xintercept = CI_pt[2], color = 'hotpink', linetype = 2) +
-  geom_text(aes(CI_pt[1],-0.001,label=round(CI_pt[1]))) +
-  geom_text(aes(CI_pt[2],-0.001,label=round(CI_pt[2]))) +
-  ggtitle('Normal distributions of champions points') +
-  xlab('points')
-```
-
-From the distribution graph, we estimate that the winning point of 95% confidence interval should be between approximately `r CI_pt[1]` to `r CI_pt[2]`.
-
-```{R echo=FALSE}
-mean_wins = mean(champions$W.x)
-z_wins = 1.960 #this is the 95% confidence level value
-s_wins = sd(champions$W.x)
-n_wins = nrow(champions)
-CI_wins = mean_wins + c(-1,1) * z_wins * s_wins / sqrt(n_wins)
-gnorm(mean_wins, s_wins, color = 'cyan') +
-  geom_vline(xintercept = CI_wins[1], color = 'hotpink', linetype = 2) +
-  geom_vline(xintercept = CI_wins[2], color = 'hotpink', linetype = 2) +
-  geom_text(aes(CI_wins[1],-0.002,label=round(CI_wins[1]))) +
-  geom_text(aes(CI_wins[2],-0.002,label=round(CI_wins[2]))) +
-  ggtitle('Normal distributions of champions wins') +
-  xlab('Number of Wins')
-```
-
-From the distribution graph, we estimate that the number of wins of 95% confidence interval should be between approximately `r CI_wins[1]` to `r CI_wins[2]`.
-
-> Analysis: To conclude, we will have 95% confidence to say that the champion of the current season of La Liga will win `r CI_wins[1]` to `r CI_wins[2]` matches and get `r CI_pt[1]` to `r CI_pt[2]` points.
-
-> Question 3: 
-
-Lastly, we wanted to look at the number of saves and goals of the champion of the LaLiga over the years. We want to see if we can make a linear regression model to predict the overall saves and goals of the winner. 
-
-First, we look at the number of Saves of the champion over the years. 
-
-```{r, echo = FALSE}
-a <- allData %>%
-  filter(allData$Saves != "N/A") %>%
-  filter(Rk == "1") %>%
-  mutate(year = as.numeric(year)) %>%
-  select(Saves, year)
-
-a %>%
-  ggplot(aes(x = year, y = Saves)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  ggtitle("Number of Saves of Champion")
-```
-
-Just from looking at the graph, we can recognize that it has a pretty strong linear trend. So, now we look at the residuals so we can make sure those residuals follow an approximate normal distribution and no strong pattern.
-
-```{r, echo = FALSE}
-
-lm0 <- lm(Saves~year, a)
-
-library(modelr)
-a <- a %>%
-  add_residuals(lm0) %>%
-  add_predictions(lm0)
-
-ggplot(a, aes(x=year, y =resid)) +
-  geom_point() +
-  xlab("Years") +
-  ylab("Residuals") +
-  geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
-```
-
-Since, the residuals are what they are supposed to be, we can state our linear model.
-
-$$
-Saves = -2.516*year + 5159.044
-$$
-```{r, include = FALSE}
-ci_a <- a %>%
-  pull(Saves)
-
-t.test(ci_a)
-```
-
-However, these are only point estimates, so we will use a 95% confidence level to show our final results.
-
-> Analysis: To conclude, our 95% confidence interval for the number of Saves will be between 95 and 116 saves.
-
-Next, we want to look at the trend of Goals of the champion over the years. So, we will perform the same calculations as seen above.
-
-```{r, echo = FALSE}
-b <- allData %>%
-  filter(allData$Saves != "N/A") %>%
-  filter(Rk == "1") %>%
-  mutate(year = as.numeric(year)) %>%
-  select(GF, year)
-
-b %>%
-  ggplot(aes(x = year, y = GF)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  ylab("Goals") +
-  ggtitle("Number of Goals of Champion")
-
-lm1 <- lm(GF~year, b)
-
-
-library(modelr)
-b <- b %>%
-  add_residuals(lm1) %>%
-  add_predictions(lm1)
-
-ggplot(b, aes(x=year, y =resid)) +
-  geom_point() +
-  xlab("Years") +
-  ylab("Residuals") +
-  geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
-```
-
-Since the model has a clear linear trend and the residuals are what they are supposed to be, we can now state out linear model.
-
-$$
-Goals = 1.656*year - 3239.866
-$$
-```{r, include = FALSE}
-ci_b <- b %>%
-  pull(GF)
-
-t.test(ci_b)
-```
-
-Now, we also state our 95% confidence interval for the number of Goals.
-
-> Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 80 and 97 Goals.
-
-## Conclusion
-
-Looking at our results, There is a `r championNames$pr[1]*100`% chance that the winning team will be Barcelona, `r championNames$pr[2]*100`% chance that it will be Real Madrid, and `r (sum(championNames$pr)-(championNames$pr[1] + championNames$pr[2]))*100`% chance it will be one of the other teams. Next we will highlight the likely attributes of the winner of the 2020-2021 La Liga season. We can say with 95% confidence that the total number of points the winning team will have will fall between `r CI_pt[1]` to `r CI_pt[2]` and their total number of wins will be within `r round(CI_wins[1])` to `r round(CI_wins[2])`. Lastly we can make statistical predictions on the number of saves and goals that the winning team will have. Through our linear regression model we discovered with 95% confidence, the winning team will score between 80 and 97 goals and save between 95 and 116 shots.
-
-One short coming of our project was that we had very limited amount of data. We only had about 20 years of data to work with which is not that much so our results might not be very accurate. Another short coming is that we tended to focus on only two aspects of the team in our linear regression. But, in reality, there might be a lot more variables that come into play. Instead of a linear regression, a multiple linear regression might suit this situation more, but we haven't learned that model yet.
-
-When considering what makes a good soccer team, there are obviously more factors than just the number of goals and save they have. For example we could consider how a teams top player affects their performance within the league and factor that into our final analysis of the data. If we were to do this, we would find more data on specific player statistics, (i.e. Chances created, Shots On Goal, Possession Rate, etc.). We could also consider each teams overall offensive and defensive ratings and see how that has affected the winners of each season throughout history.
-
-
-<!-- ## Extra Graphs -- Not sure where/how to use -->
-
-<!-- > Question: How does the winning teams saves and goals compare to non-winning teams? -->
-
-<!-- We now want to start looking at both champion teams and non-champion teams. To do this we will perform another Linear regression on saves vs. goals for champions and non champions in each season. -->
+To answer this question, we will plot Goals_Against/Saves over time for both Champion and non Champion team.
  
-```{r include=TRUE}
+```{r echo=FALSE}
 savesAndGoals <- allData %>%
   mutate(Rk =
     case_when(
       Rk == 1 ~ "Champion",
       TRUE ~ "Not Champion",
-    )
+    ),
+    ratio = GA.x/Saves
   ) %>%
   group_by(Rk) %>%
-  select(Saves, GF, GA.x, Rk) %>%
+  select(Rk, year, ratio) %>%
   drop_na()
   
 savesAndGoals %>%
-  ggplot(aes(x=Saves, y=GF, color=as.factor(Rk))) +
+  ggplot(aes(x=as.numeric(year), y=ratio, color=as.factor(Rk))) +
   geom_point(alpha = 0.5) +
   geom_smooth(method="lm", se = FALSE) +
   scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
   labs(color = "Season Champion") +
-  ggtitle("Goals vs Saves", subtitle = "By Chamion and Non-Champion teams") +
-  xlab("Saves (in a season)") +
-  ylab("Goals For (in a season)")
+  ggtitle("Goals Against/Saves vs Time", subtitle = "By Chamion and Non-Champion teams") +
+  xlab("Year") +
+  ylab("Goals Agaisnt over Saves (in a season)")
+```
+To check if the above graph is statistically significant we can perform a t test. If the p-value of the t test is less than our alpha (0.05) we can reject the null hypothesis.
 
-sgChamp <- savesAndGoals %>%
+```{r echo=FALSE}
+champ <- savesAndGoals %>%
   filter(Rk == "Champion")
 
-sgNonChamp <- savesAndGoals %>%
-  filter(Rk != "Champion")
+nonChamp <- savesAndGoals %>%
+  filter(Rk == "Not Champion")
 
-champLm <- lm(Saves~GF, sgChamp)
-nonChampLm <-  lm(Saves~GF, sgNonChamp)
-summary(lm(Saves~GF+Rk, savesAndGoals))
+ttest = t.test(champ$ratio, nonChamp$ratio)
+ttest
 ```
-
-```{r include=TRUE}
-savesAndGoals %>%
-  ggplot(aes(x=Saves, y=GA.x, color=as.factor(Rk))) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method="lm", se = FALSE) +
-  scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
-  labs(color = "Season Champion") +
-  ggtitle("Goals vs Saves", subtitle = "By Chamion and Non-Champion teams") +
-  xlab("Saves (in a season)") +
-  ylab("Goals Against (in a season)")
-```
-
-
+The p-value from our test was `r ttest$p.value`, which is less than 0.05 so we can reject the null hypothesis that the non-championship team's ratio equals the championship teams ratio. From the t test we can also say with 95% confidence that the championship teams ratio of Goals Against to Saves will be 0.061344 to 0.1301 below the ratio of non championship teams. This means that the number of Saves a team has in a season in more important because Saves is the denominator that is creating the smaller value, leading us to the conclusion that defensive plays a higher factor than offense.
 
 > Another potential characteristic of the winner of a season is the proportion of goals by top scorer among total goals of the team. 
 
 For each champion team of each season, they have a top scorer that scores more goals than other players in the team and we believe that this consists of a sizable proportion of total goals of the team comparing to other teams. 
 ```{R echo=FALSE}
-top_scorer <- champions %>% 
+top_scorer <- allData %>% 
   mutate(top_scorer_goals = as.numeric(str_trim(str_sub(Top.Team.Scorer, -2, -1)))) %>% 
   # mutate(t2 = str_extract(Top.Team.Scorer, "[\d+][?!.*\d]$")) %>% 
   mutate(prop = top_scorer_goals / GF) %>% 
@@ -468,3 +274,9 @@ pt(test_stat_poss, dof) # p-value = P(T_dof <= -9.76586)
 ```
 
 Using a t-distribution with 19.6 degrees of freedom, we calculate a p-value on the order of $10^{-5}$ suggesting that we can reject the null hypothesis. This rejections means we have concluded that the mean possession rate for the top teams is greater than the mean possession rate for the rest of the league.
+
+## Conclusion
+
+One short coming of our project was that we had very limited amount of data. We only had about 20 years of data to work with which is not that much so our results might not be very accurate. Another short coming is that we tended to focus on only two aspects of the team in our linear regression. But, in reality, there might be a lot more variables that come into play. Instead of a linear regression, a multiple linear regression might suit this situation more, but we haven't learned that model yet.
+
+When considering what makes a good soccer team, there are obviously more factors than just the number of goals and save they have. For example we could consider how a teams top player affects their performance within the league and factor that into our final analysis of the data. If we were to do this, we would find more data on specific player statistics, (i.e. Chances created, Shots On Goal, Possession Rate, etc.). We could also consider each teams overall offensive and defensive ratings and see how that has affected the winners of each season throughout history.
