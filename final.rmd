@@ -59,10 +59,9 @@ allData <- allData %>%
 
 ## **Introduction**
 
-"People cry when their team lose, and they cry even more when their team wins." Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer leagues in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona, el clásico. Our team members are also fans of this soccer league and we decided to conduct research on the La Liga data. Throughout history, only nine different teams have been crowned champions, and we are curious about their common characteristics so that we can make predictions of these aspects for next season's champion. 
+"People cry when their team lose, and they cry even more when their team wins." Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer leagues in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona. Our team members are also fans of this soccer league and we decided to conduct research on the La Liga data. Throughout history, only nine different teams have been crowned champions, and we are curious about what makes those teams so special. More specifically, what are some of their common characteristics that result in them always performing so well.
 
-Starting off, we will take a look at the trend of total goals and saves of the champion of the league over the years. Then we will look into the top scorer's goals among the total goals because there is always a striker in the team that takes the responsibility of goals. Lastly we will see if the possession rates for champions are higher than other teams.
-
+We theorize that three reasons why those teams perform so well is that the total amount of goals per season of said top teams keeps increasing in a consistent or linear manner, the top scorer for the teams that perform well have a higher contribution to the total goals when compared to the rest of the league, and that the possession rate for those top teams are also much higher.
 
 ## **Background**
 
@@ -107,57 +106,14 @@ Saves|Total number of saves the team had during season
 ## **Analysis**
 
 > Question 1: 
-First, we wanted to look at the number of saves and goals of the champion of the LaLiga over the years. We want to see if we can make a linear regression model to predict the overall saves and goals of the winner. 
+First, we wanted to test our claim that we can make a linear regression model for the amount of total goals of the top 3 teams of the current season. 
 
-First, we look at the number of Saves of the champion over the years. 
-
-```{r, echo = FALSE}
-a <- allData %>%
-  filter(allData$Saves != "N/A") %>%
-  filter(Rk <= 3) %>%
-  mutate(year = as.numeric(year)) %>%
-  select(Saves, year)
-a %>%
-  ggplot(aes(x = year, y = Saves)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  ggtitle("Number of Saves of Champion")
-```
-
-Just from looking at the graph, we can recognize that it has a pretty strong linear trend. So, now we look at the residuals so we can make sure those residuals follow an approximate normal distribution and have no strong pattern.
-
-```{r, echo = FALSE}
-lm0 <- lm(Saves~year, a)
-library(modelr)
-a <- a %>%
-  add_residuals(lm0) %>%
-  add_predictions(lm0)
-ggplot(a, aes(x=year, y =resid)) +
-  geom_point() +
-  xlab("Years") +
-  ylab("Residuals") +
-  geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
-```
-
-Since, the residuals are what they are supposed to be, we can state our linear model.
-
-$$
-Saves = -2.1710*year + 4472.9553
-$$
-```{r, include = FALSE}
-summary(lm0)
-confint(lm0)
-```
-
-However, these are only point estimates, so we will use a 95% confidence level to show our final results.
-
-> Analysis: To conclude, our 95% confidence interval for the number of Saves will be between 95 and 116 saves.
-Next, we want to look at the trend of Goals of the champion over the years. So, we will perform the same calculations as seen above.
+First, we look at the number of Goals of the top 3 teams for each season over the years. 
 
 ```{r, echo = FALSE}
 b <- allData %>%
   filter(allData$Saves != "N/A") %>%
-  filter(Rk == "1") %>%
+  filter(Rk <= 3) %>%
   mutate(year = as.numeric(year)) %>%
   select(GF, year)
 b %>%
@@ -175,28 +131,31 @@ ggplot(b, aes(x=year, y =resid)) +
   geom_point() +
   xlab("Years") +
   ylab("Residuals") +
+  ggtitle("Residuals for Goals~Year") +
   geom_hline(aes(yintercept=0), color="red", linetype = "dashed")
 ```
 
-Since the model has a clear linear trend and the residuals are what they are supposed to be, we can now state out linear model.
+Just from looking at the graph, we can recognize that it looks it has a positive linear relationship. Then, we also look at the residuals so we can make sure those residuals follow an approximate normal distribution and have no strong pattern. Since, this is the case we can now state our linear regression model. 
 
 $$
-Goals = 1.656*year - 3239.866
+Goals = 1.1667*year - 2265.2698
 $$
-```{r, include = FALSE}
-ci_b <- b %>%
-  pull(GF)
-t.test(ci_b)
+Now, we state our 95% confidence interval for the number of Goals.
+
+```{r,include = FALSE}
+confint(lm1)
+upper <- -697.106 + (1.947 * 2021)
+lower <- -3833.434 + (0.386 * 2021)
 ```
 
-Now, we also state our 95% confidence interval for the number of Goals.
+So, according to our calculations, our 95% confidence interval would be between -3052 and 3273. Now, obviously this makes no sense, and after doing some research , we found out that this meant that there is no significant evidence of a linear relationship as our confidence interval contains 0. 
 
-> Analysis: To conclude, our 95% confidence interval for the number of Goals will be between 80 and 97 Goals.
+> Analysis: To conclude, there is no significant evidence of a linear relationship and the statement in our thesis is proven to be false.
 
 
-> Another potential characteristic of the winner of a season is the proportion of goals by top scorer among total goals of the team. 
+> Next, we wanted to look at the second part of our thesis about how a top team has a higher proportion of goals from their top scorer compared to the rest of the league.
 
-For each champion team of each season, they have a top scorer that scores more goals than other players in the team and we believe that this consists of a sizable proportion of total goals of the team comparing to other teams. 
+For each champion team of each season, they have a top scorer that scores more goals than other players in the team and we believe that this consists of a sizable proportion of total goals of the team compared to other teams. 
 ```{R echo=FALSE}
 top_scorer <- allData %>% 
   mutate(top_scorer_goals = as.numeric(str_trim(str_sub(Top.Team.Scorer, -2, -1)))) %>% 
@@ -253,6 +212,7 @@ To carry out this test, we will consider a two-sample test with the following te
 $$
 T = \frac{p_0-p_1}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
 $$
+
 ```{R include=FALSE}
 # lm_s = lm()
 t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop, alternative = "greater")
@@ -263,13 +223,14 @@ t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop,
 #             sum_GF = sum(GF))
 # prop.test(c(858, 8118), c(2794, 29612))
 ```
+
 After performing the test we get the following results:
 
 - $T = 2.3691$
 - ${DegreesOfFreedom} = 35.955$
 - $PValue = 0.01166$
 
-We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the t-test, we found that the p-value is 0.01166 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams.
+We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the t-test, we found that the p-value is 0.01166 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.
 
 <!-- > How about the trend of this proportion we just talked about? -->
 
@@ -282,7 +243,7 @@ We perform the hypothesis test where the null hypothesis is that the proportions
 #   labs(x="Season", y="The proportion of goals by top scorer", color = "Season Champion")
 ```
 
-> One more potential characteristic of a winning team is the possession rate of that respective team. 
+> Now, our last part of the thesis states that the possession rate of a top team is higher than the rest of the league. 
 
 It's reasonable to assume that a winning team would have a higher possession rate as that would give the team more chances to score. So, we wanted to test that:
 
@@ -294,12 +255,13 @@ poss <- allData %>%
   group_by(Rk) %>%
   ggplot(aes(x = Poss, y = GF, color=as.factor(Rk))) +
   geom_point() +
+  scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
   labs(x="Possession Rate", y="Goals Scored", color = "La Liga Teams") +
   ggtitle("Possession Rate vs Goals")
 
 poss
-  
 ```
+
 The graph above supports our initial claim as the Top Teams have a much higher possession rate and thus end up with more goals scored. Now, we want to conduct a hypothesis test to reaffirm our claim that teams with high possession rates tend to do better. 
 
 We can frame this as a hypothesis test described as follows:
@@ -314,7 +276,7 @@ $$
 
 To carry out this test, we will consider a two-sample test with the following test statistic:
 $$
-T = \frac{(\bar{x}_0-\bar{x}_1) - (\mu_0-\mu_1)}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
+T = \frac{(\mu_0-\mu_1)}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
 $$
 where under the null $\mu_0 - \mu_1 = 0$, $n_i$ is the sample size for group $i=0,1$, and $s_i$ is the standard deviation of group $i$.
 
