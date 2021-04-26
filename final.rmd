@@ -215,22 +215,22 @@ $$
 
 ```{R include = FALSE}
 # lm_s = lm()
-t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop, alternative = "greater")
+# t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop, alternative = "greater")
 
 # top_scorer2 %>% 
 #   group_by(Rk) %>% 
 #   summarise(sum_top_scorer = sum(top_scorer_goals),
 #             sum_GF = sum(GF))
-# prop.test(c(858, 8118), c(2794, 29612))
+prop.test(c(858, 8118), c(2794, 29612))
 ```
 
 After performing the test we get the following results:
 
-- $T = 2.3691$
-- ${DegreesOfFreedom} = 35.955$
-- $PValue = 0.01166$
+- $T = 13.67$
+- ${DegreesOfFreedom} = 1$
+- $PValue = 0.0002179$
 
-We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the t-test, we found that the p-value is 0.01166 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.
+We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the t-test, we found that the p-value is 0.0002179 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.
 
 <!-- > How about the trend of this proportion we just talked about? -->
 
