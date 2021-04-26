@@ -227,7 +227,6 @@ prop.test(c(858, 8118), c(2794, 29612))
 After performing the test we get the following results:
 
 - $Z = 13.67$
-- ${DegreesOfFreedom} = 1$
 - $PValue = 0.0002179$
 
 We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the z-test, we found that the p-value is 0.0002179 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.
