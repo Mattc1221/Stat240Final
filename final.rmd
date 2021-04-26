@@ -59,9 +59,9 @@ allData <- allData %>%
 
 ## **Introduction**
 
-"People cry when their team lose, and they cry even more when their team win." Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer league in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona, el clásico. Our team members are also fans of this soccer league and we decide to have a research about the data of La Liga. In the history, nine teams have been crowned champions, and we are curious about their common characteristics from past seasons, and we make predictions of these aspects for next season's champion. 
+"People cry when their team lose, and they cry even more when their team wins." Our team decided to conduct our analysis on the La Liga Football League as it is one of the most influential soccer leagues in the world. The league also has the most exciting rivalry in history: Real Madrid vs Barcelona, el clásico. Our team members are also fans of this soccer league and we decided to conduct research on the La Liga data. Throughout history, only nine different teams have been crowned champions, and we are curious about their common characteristics so that we can make predictions of these aspects for next season's champion. 
 
-To begin out approach we will look historically into the league to perform a linear regression on the winners of goals and saves vs years. Then we will look into the top scorer's goals among the total goals because there is always a striker in the team that takes the responsibility of goals. Lastly we will see if the possession rates for champions are higher than other teams.
+Starting off, we will take a look at the trend of total goals and saves of the champion of the league over the years. Then we will look into the top scorer's goals among the total goals because there is always a striker in the team that takes the responsibility of goals. Lastly we will see if the possession rates for champions are higher than other teams.
 
 
 ## **Background**
@@ -105,8 +105,8 @@ The overall aim of our analysis on this data will be to determine the characteri
 
 ## **Analysis**
 
-> Question 3: 
-Lastly, we wanted to look at the number of saves and goals of the champion of the LaLiga over the years. We want to see if we can make a linear regression model to predict the overall saves and goals of the winner. 
+> Question 1: 
+First, we wanted to look at the number of saves and goals of the champion of the LaLiga over the years. We want to see if we can make a linear regression model to predict the overall saves and goals of the winner. 
 
 First, we look at the number of Saves of the champion over the years. 
 
@@ -123,7 +123,7 @@ a %>%
   ggtitle("Number of Saves of Champion")
 ```
 
-Just from looking at the graph, we can recognize that it has a pretty strong linear trend. So, now we look at the residuals so we can make sure those residuals follow an approximate normal distribution and no strong pattern.
+Just from looking at the graph, we can recognize that it has a pretty strong linear trend. So, now we look at the residuals so we can make sure those residuals follow an approximate normal distribution and have no strong pattern.
 
 ```{r, echo = FALSE}
 lm0 <- lm(Saves~year, a)
@@ -141,12 +141,15 @@ ggplot(a, aes(x=year, y =resid)) +
 Since, the residuals are what they are supposed to be, we can state our linear model.
 
 $$
-Saves = -2.516*year + 5159.044
+Saves = -1.9429*year + 4009.4762
 $$
 ```{r, include = FALSE}
-ci_a <- a %>%
-  pull(Saves)
-t.test(ci_a)
+summary(lm0)
+
+b0 <- lm0$coefficients[1]
+b1 <- lm0$coefficients[2]
+
+
 ```
 
 However, these are only point estimates, so we will use a 95% confidence level to show our final results.
