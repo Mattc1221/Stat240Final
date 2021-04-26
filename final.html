@@ -294,9 +294,6 @@ summary {
 <p><span class="math display">\[
 Goals = 1.1667*year - 2265.2698
 \]</span> Now, we state our 95% confidence interval for the slope of the linear regression.</p>
-<pre><code>##                     2.5 %      97.5 %
-## (Intercept) -3833.4339514 -697.105731
-## year            0.3864891    1.946844</code></pre>
 <p>So, according to our calculations, our 95% confidence interval is between 0.3864 and 1.9468. After conduction some research we found that because 0 does not exist within our confidence interval, this shows that there exists significant evidence of a linear relationship.</p>
 <blockquote>
 <p>Analysis: To conclude, there is no significant evidence of a linear relationship and the statement in our thesis is proven to be false.</p>
@@ -310,27 +307,16 @@ Goals = 1.1667*year - 2265.2698
 H_0: p_0 = p_1
 \]</span> <span class="math display">\[
 H_a: p_0 &gt; p_1
-\]</span> where <span class="math inline">\(\mu_0\)</span> is the proportion of top scorer’s goals over total goals for champions teams, and <span class="math inline">\(\mu_1\)</span> is the top scorer’s goals over total goals for non-champions teams. To carry out this test, we will consider a two-sample test with the following test statistic: <span class="math display">\[
+\]</span> where <span class="math inline">\(\mu_0\)</span> is the proportion of top scorer’s goals over total goals for champions teams, and <span class="math inline">\(\mu_1\)</span> is the top scorer’s goals over total goals for non-champions teams. To carry out this test, we will consider a two-sample z-test with the following test statistic: <span class="math display">\[
 T = \frac{p_0-p_1}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
 \]</span></p>
-<pre><code>## 
-##  2-sample test for equality of proportions with continuity correction
-## 
-## data:  c(858, 8118) out of c(2794, 29612)
-## X-squared = 13.67, df = 1, p-value = 0.0002179
-## alternative hypothesis: two.sided
-## 95 percent confidence interval:
-##  0.01490221 0.05097978
-## sample estimates:
-##    prop 1    prop 2 
-## 0.3070866 0.2741456</code></pre>
 <p>After performing the test we get the following results:</p>
 <ul>
 <li><span class="math inline">\(T = 13.67\)</span></li>
 <li><span class="math inline">\({DegreesOfFreedom} = 1\)</span></li>
 <li><span class="math inline">\(PValue = 0.0002179\)</span></li>
 </ul>
-<p>We perform the hypothesis test where the null hypothesis is that the proportions are equal. After doing the t-test, we found that the p-value is 0.0002179 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer’s goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.</p>
+<p>We perform the hypothesis test where the null hypothesis is that the proportions are equal. After doing the z-test, we found that the p-value is 0.0002179 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer’s goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.</p>
 <!-- > How about the trend of this proportion we just talked about? -->
 <blockquote>
 <p>Now, our last part of the thesis states that the possession rate of a top team is higher than the rest of the league.</p>

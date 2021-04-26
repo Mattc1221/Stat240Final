@@ -208,7 +208,7 @@ $$
 H_a: p_0 > p_1
 $$
 where $\mu_0$ is the proportion of top scorer's goals over total goals for champions teams, and $\mu_1$ is the top scorer's goals over total goals for non-champions teams.
-To carry out this test, we will consider a two-sample test with the following test statistic:
+To carry out this test, we will consider a two-sample z-test with the following test statistic:
 $$
 T = \frac{p_0-p_1}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
 $$
@@ -230,7 +230,7 @@ After performing the test we get the following results:
 - ${DegreesOfFreedom} = 1$
 - $PValue = 0.0002179$
 
-We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the t-test, we found that the p-value is 0.0002179 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.
+We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the z-test, we found that the p-value is 0.0002179 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.
 
 <!-- > How about the trend of this proportion we just talked about? -->
 
