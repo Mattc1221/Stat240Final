@@ -88,10 +88,8 @@ W.x|Number of wins for that team during season
 L.x|Number of losses for that team during season
 D.x|Number of draws for that team during season
 GF|Total number of goals the team scored during season
-GA.x|Total number of goals the team conceded during season
 Top.Team.Scorer|Name of team's top scorer during season
 Poss|Average Rate of Possession of the ball during season
-Saves|Total number of saves the team had during season
 
 > Data Citation:
 
@@ -99,7 +97,7 @@ Saves|Total number of saves the team had during season
  
 > Data Caveats:
  
-The data set we found does not have data for Poss or Saves before the year 2000. In parts of analysis that use those metrics, we used the data for the top 3 teams of each season instead of just the champion team. This allowed us to have a more accurate sample size.
+The data set we found does not have data for Poss or Goals before the year 2000. In parts of analysis that use those metrics, we used the data for the top 3 teams of each season instead of just the champion team. This allowed us to have a more accurate sample size.
 
 
 ## **Analysis**
@@ -322,6 +320,6 @@ In the world of soccer, everything is unpredictable and there are a lot more fac
 
 From our analysis of the La Liga data, we are able to say that the top teams will most likely have a top scorer with a higher proportion of total goals when compared to the average top scorer of the other teams. This makes sense if you consider that some of the top teams in the league have players that are some of the best to ever play the game. For example, Lionel Messi played 16 years for Barcelona and he is the top scorer in the team's history. Likewise Cristiano Ronaldo played 9 years with Real Madrid. Then, we are able to confirm that the top teams of the league will most likely have a higher possession rate than the rest of the league. This makes sense as the longer a team holds the ball, the more chances it has to score and it also reduces the chances of the other team to score. Finally, we also came to the conlusion that the relationship between Goals and Years for the top performing teams seems to be a linear one. This suggests that the top teams in the league keep on getting better every year; no wonder they keep on performing so well.
 
-One shortcoming of our project was that we had very limited amounts of data. Although we had league data from 1988 through 2020, certain metrics were not logged before 2000, so for parts of our analysis where we used data that was only available from 2000 and later, we had to account this by analyzing the top 3 teams instead of just the champion team. Consequently, our results may not be as accurate. Another shortcoming is that we tended to focus on only three aspects of a soccer team, namely goals, possession and top scorer . But, in reality, there might be a lot more variables that come into play. For example, we could consider each team's overall offensive and defensive ratings to see how that has affected the winners of each season throughout history. This question could be done in the future to expand our analysis.
+One shortcoming of our project was that we had very limited amounts of data. Although we had league data from 1988 through 2020, certain metrics were not logged before 2000, so for parts of our analysis where we used data that was only available from 2000 and later, we had to account this by analyzing the top 3 teams instead of just the champion team. Consequently, our results may not be as accurate. Another shortcoming is that we tended to focus on only three aspects of a soccer team, namely goals, possession and top scorer. But, in reality, there might be a lot more variables that come into play. For example, we could consider each team's overall offensive and defensive ratings to see how that has affected the winners of each season throughout history. This question could be done in the future to expand our analysis.
 
 To conclude, through our data analysis of the La Liga soccer league, we are able to confirm that the top performing teams tend to have a top scorer who is more influential than his counterparts on other teams as we performed a t-test which gave us a p-value of 0.012. Then, we can also say that the possession rate of a top team will be, on average, higher than other teams in the league as we got a p-value to the order of $10^{-5}$ when performing that t-test. And, finally we are able to confirm that the relationship between Goals and Years for the top teams seems to be linear as the 95% confidence interval for the slope of that linear regression model was between 0.3864 and 1.9468.
