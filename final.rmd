@@ -114,7 +114,7 @@ First, we look at the number of Saves of the champion over the years.
 ```{r, echo = FALSE}
 a <- allData %>%
   filter(allData$Saves != "N/A") %>%
-  filter(Rk == "1") %>%
+  filter(Rk <= 3) %>%
   mutate(year = as.numeric(year)) %>%
   select(Saves, year)
 a %>%
@@ -142,15 +142,11 @@ ggplot(a, aes(x=year, y =resid)) +
 Since, the residuals are what they are supposed to be, we can state our linear model.
 
 $$
-Saves = -1.9429*year + 4009.4762
+Saves = -2.1710*year + 4472.9553
 $$
 ```{r, include = FALSE}
 summary(lm0)
-
-b0 <- lm0$coefficients[1]
-b1 <- lm0$coefficients[2]
-
-
+confint(lm0)
 ```
 
 However, these are only point estimates, so we will use a 95% confidence level to show our final results.
