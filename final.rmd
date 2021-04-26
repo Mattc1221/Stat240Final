@@ -140,7 +140,7 @@ Just from looking at the graph, we can recognize that it looks it has a positive
 $$
 Goals = 1.1667*year - 2265.2698
 $$
-Now, we state our 95% confidence interval for the number of Goals.
+Now, we state our 95% confidence interval for the slope of the linear regression. 
 
 ```{r,echo = FALSE}
 confint(lm1)
@@ -148,7 +148,7 @@ upper <- -697.106 + (1.947 * 2021)
 lower <- -3833.434 + (0.386 * 2021)
 ```
 
-So, according to our calculations, our 95% confidence interval would be between -3052 and 3273. Now, obviously this makes no sense, and after doing some research , we found out that this meant that there is no significant evidence of a linear relationship as our confidence interval contains 0. 
+So, according to our calculations, our 95% confidence interval is between 0.3864 and 1.9468. After conduction some research we found that because 0 does not exist within our confidence interval, this shows that there exists significant evidence of a linear relationship.
 
 > Analysis: To conclude, there is no significant evidence of a linear relationship and the statement in our thesis is proven to be false.
 
@@ -326,7 +326,7 @@ Using a t-distribution with 19.6 degrees of freedom, we calculate a p-value on t
 ## Discussion
 In the world of soccer, everything is unpredictable and there are a lot more factors that could affect the trend of a season. For example, transfers could bring new players that strengthen the team and the injuries of key players could hinder a team's success. It is even more difficult to predict the winner of a future season, but we can definitively say a few things about top performing teams.
 
-From our analysis of the La Liga data, we are able to say that the top teams will have a top scorer with a higher proportion of total goals when compared to the average top scorer of the other teams. This makes sense if you consider that some of the top teams in the league have players that are some of the best to ever play the game. For example, Lionel Messi played 16 years for Barcelona and he is the top scorer in the team's history. Likewise Cristiano Ronaldo played 9 years with Real Madrid. Lastly we are also able to confirm that the top teams of the league will have a higher possession rate than the rest of the league. This makes sense as the longer a team holds the ball, the more chances it has to score and it also reduces the chances of the other team to score.
+From our analysis of the La Liga data, we are able to say that the top teams will most likely have a top scorer with a higher proportion of total goals when compared to the average top scorer of the other teams. This makes sense if you consider that some of the top teams in the league have players that are some of the best to ever play the game. For example, Lionel Messi played 16 years for Barcelona and he is the top scorer in the team's history. Likewise Cristiano Ronaldo played 9 years with Real Madrid. Lastly we are also able to confirm that the top teams of the league will most likely have a higher possession rate than the rest of the league. This makes sense as the longer a team holds the ball, the more chances it has to score and it also reduces the chances of the other team to score.
 
 One shortcoming of our project was that we had very limited amounts of data. Although we had league data from 1988 through 2020, certain metrics were not logged before 2000, so for parts of our analysis where we used data that was only available from 2000 and later, we had to account this by analyzing the top 3 teams instead of just the champion team. Consequently, our results may not be as accurate. Another shortcoming is that we tended to focus on only three aspects of a soccer team, namely goals, possession and top scorer . But, in reality, there might be a lot more variables that come into play. For example, we could consider each team's overall offensive and defensive ratings to see how that has affected the winners of each season throughout history. This question could be done in the future to expand our analysis.
 
