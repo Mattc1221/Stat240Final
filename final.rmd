@@ -142,7 +142,7 @@ Goals = 1.1667*year - 2265.2698
 $$
 Now, we state our 95% confidence interval for the number of Goals.
 
-```{r,include = FALSE}
+```{r,echo = FALSE}
 confint(lm1)
 upper <- -697.106 + (1.947 * 2021)
 lower <- -3833.434 + (0.386 * 2021)
@@ -213,7 +213,7 @@ $$
 T = \frac{p_0-p_1}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
 $$
 
-```{R include=FALSE}
+```{R echo=FALSE}
 # lm_s = lm()
 t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop, alternative = "greater")
 
@@ -305,7 +305,7 @@ n1 <- length(poss1)
 se <- sqrt(sd0^2/n0+sd1^2/n1)
 test_stat_poss <- (mean0-mean1)/se
 ```
-```{r include=FALSE}
+```{r echo=FALSE}
 ## Get degrees of freedom of t-distribution from t.test()
 t.test(poss0, poss1, alternative ="less")
 
