@@ -99,8 +99,7 @@ Saves|Total number of saves the team had during season
  
 > Data Caveats:
  
-- To perform our analysis we considered all teams data, not just the teams that are currently in the league.
-- The data set we found does not have data for Poss or Saves before the year 2000. In parts of analysis that use those metrics, we used the data for the top 3 teams of each season instead of just the champion team. This allowed us to have a more accurate sample size.
+The data set we found does not have data for Poss or Saves before the year 2000. In parts of analysis that use those metrics, we used the data for the top 3 teams of each season instead of just the champion team. This allowed us to have a more accurate sample size.
 
 
 ## **Analysis**
