@@ -142,7 +142,7 @@ Goals = 1.1667*year - 2265.2698
 $$
 Now, we state our 95% confidence interval for the slope of the linear regression. 
 
-```{r,echo = FALSE}
+```{r,include = FALSE}
 confint(lm1)
 upper <- -697.106 + (1.947 * 2021)
 lower <- -3833.434 + (0.386 * 2021)
@@ -213,7 +213,7 @@ $$
 T = \frac{p_0-p_1}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
 $$
 
-```{R echo=FALSE}
+```{R include = FALSE}
 # lm_s = lm()
 t.test(champion_top_scorer$champion_prop, champion_top_scorer$not_champion_prop, alternative = "greater")
 
