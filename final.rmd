@@ -67,7 +67,7 @@ We theorize that three reasons why those teams perform so well is that the total
 
 > Raw Data:
 
-We found data for the La Liga Soccer League. Each season from 1988-2020, there are multiple sets of data ranging from team rankings, top scorers, standard squad statistics, team goalkeeping, team shooting, to statistics on individual players. We selected three sets of data:
+We found data for the La Liga Soccer League online for each season from 1988-2020, there are multiple sets of data ranging from team rankings, top scorers, standard squad statistics, team goalkeeping, team shooting, to statistics on individual players. We selected three sets of data:
 
 * League Table: includes team rankings, total wins, loses, goals for, goals against, etc.
 * Squad Standard Stats: includes general performance statistics of each team.
@@ -150,7 +150,7 @@ lower <- -3833.434 + (0.386 * 2021)
 
 So, according to our calculations, our 95% confidence interval is between 0.3864 and 1.9468. After conduction some research we found that because 0 does not exist within our confidence interval, this shows that there exists significant evidence of a linear relationship.
 
-> Analysis: To conclude, there is no significant evidence of a linear relationship and the statement in our thesis is proven to be false.
+> Analysis: To conclude, there exists significant evidence of a linear relationship between Goals and Years of the top performing teams.
 
 
 > Next, we wanted to look at the second part of our thesis about how a top team has a higher proportion of goals from their top scorer compared to the rest of the league.
