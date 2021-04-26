@@ -67,7 +67,7 @@ We theorize that three reasons why those teams perform so well is that the total
 
 > Raw Data:
 
-We found data for the La Liga Soccer League. Each season from 1988-2020, there are multiple sets of data ranging from team rankings, top scorers, standard squad statistics, team goalkeeping, team shooting, to statistics on individual players. We selected three sets of data:
+We found data for the La Liga Soccer League online for each season from 1988-2020, there are multiple sets of data ranging from team rankings, top scorers, standard squad statistics, team goalkeeping, team shooting, to statistics on individual players. We selected three sets of data:
 
 * League Table: includes team rankings, total wins, loses, goals for, goals against, etc.
 * Squad Standard Stats: includes general performance statistics of each team.
@@ -149,7 +149,7 @@ lower <- -3833.434 + (0.386 * 2021)
 
 So, according to our calculations, our 95% confidence interval is between 0.3864 and 1.9468. After conduction some research we found that because 0 does not exist within our confidence interval, this shows that there exists significant evidence of a linear relationship.
 
-> Analysis: To conclude, there is no significant evidence of a linear relationship and the statement in our thesis is proven to be false.
+> Analysis: To conclude, there exists significant evidence of a linear relationship between Goals and Years of the top performing teams.
 
 
 > Next, we wanted to look at the second part of our thesis about how a top team has a higher proportion of goals from their top scorer compared to the rest of the league.
@@ -209,7 +209,7 @@ $$
 where $\mu_0$ is the proportion of top scorer's goals over total goals for champions teams, and $\mu_1$ is the top scorer's goals over total goals for non-champions teams.
 To carry out this test, we will consider a two-sample z-test with the following test statistic:
 $$
-T = \frac{p_0-p_1}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
+Z = \frac{p_0-p_1}{\sqrt{\frac{s_0^2}{n_0} + \frac{s_1^2}{n_1}}}
 $$
 
 ```{R include = FALSE}
@@ -225,8 +225,7 @@ prop.test(c(858, 8118), c(2794, 29612))
 
 After performing the test we get the following results:
 
-- $T = 13.67$
-- ${DegreesOfFreedom} = 1$
+- $Z = 13.67$
 - $PValue = 0.0002179$
 
 We perform the hypothesis test where the null hypothesis is that the proportions are equal.  After doing the z-test, we found that the p-value is 0.0002179 and it is statistically significant so that we can reject the null hypothesis. Therefore, The proportion of top scorer's goals of all goals in champions teams tend to be higher than those of non-champions teams which supports our thesis.
@@ -252,10 +251,10 @@ poss <- allData %>%
   mutate(Rk = case_when(Rk <= 3 ~ "Top Teams", 
                         TRUE ~ "Rest of League",)) %>%
   group_by(Rk) %>%
-  ggplot(aes(x = Poss, y = GF, color=as.factor(Rk))) +
-  geom_point() +
+  ggplot(aes(x = Poss, y = GF, fill=as.factor(Rk))) +
+  geom_boxplot() +
   scale_color_manual(values = c("#e05a5e", "#58e0d5")) +
-  labs(x="Possession Rate", y="Goals Scored", color = "La Liga Teams") +
+  labs(x="Possession Rate", y="Goals Scored", fill = "La Liga Teams") +
   ggtitle("Possession Rate vs Goals")
 
 poss
@@ -304,7 +303,7 @@ n1 <- length(poss1)
 se <- sqrt(sd0^2/n0+sd1^2/n1)
 test_stat_poss <- (mean0-mean1)/se
 ```
-```{r echo=FALSE}
+```{r include=FALSE}
 ## Get degrees of freedom of t-distribution from t.test()
 t.test(poss0, poss1, alternative ="less")
 
